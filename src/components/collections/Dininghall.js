@@ -33,7 +33,6 @@ const Dininghall = () => {
                     <Card.Text> Old Price <del>{item.OldPrice}</del></Card.Text>
                     <Card.Text>Offer Price {item.Price}
                     </Card.Text>
-                    
                 </Card.Body>
             </Card>
             </Button>
@@ -41,7 +40,6 @@ const Dininghall = () => {
     ))}
     </div>
     </Container>
-
     </div>
   )
 }

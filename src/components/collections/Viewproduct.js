@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 const Viewproduct = () => {
     const navi=useNavigate()
     const {product,setCart,login,cart}=useContext(userContext)
-    const {id}=useParams()
+    const {id}=useParams() 
     const view=product.filter((item)=>item.Id===parseInt(id)) 
         const addcart=()=>{
             if(login){

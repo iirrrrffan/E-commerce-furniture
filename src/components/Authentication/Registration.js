@@ -1,6 +1,9 @@
 import React, { useContext, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { userContext } from '../../App';
+import axios from 'axios';
+
+
 
 const Registration = () => {
     const navigate = useNavigate();
@@ -10,12 +13,31 @@ const Registration = () => {
     const passwordRef = useRef(null);
     const [errorMessage, setErrorMessage] = useState('');
   
-    const submit = (e) => {
+    const submit = async (e) => {
       e.preventDefault();
       const username = userNameRef.current.value; 
       const emailId = emailIdRef.current.value;
       const password = passwordRef.current.value;
-  
+
+    try {
+      const payload = {username,emailId,password}
+      const res= await axios.post(
+        "http://localhost:3000/api/users/register",payload
+      )
+      if(res.status === 201){
+        alert("success")
+        navigate('/login');
+      }
+      console.log(res);
+    }catch(error){
+      console.log(error);
+    }
+
+
+
+
+
+
       if (!username || !emailId || !password) {
         setErrorMessage('Please fill out the form');
         return;

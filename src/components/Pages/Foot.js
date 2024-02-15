@@ -1,9 +1,9 @@
 import React from 'react'
 
 const Foot = () => {
-  return (
+  return(
     <div>
-      <footer  >
+      <footer>
         <div className='container text-center text-md-left'>
           <div className='row text-center text-md-left'>
             <div className='col-md-3 col-lg-3 col-xl-3 mx-auto mt-3'>
@@ -17,11 +17,11 @@ const Foot = () => {
               <h5 className='text-uppercase mb-4 font-weight-bold'>Products</h5>
               <p>
                 <ul>
-            <li>   Sofas</li>
-            <li>  Chairs</li>
-            <li>  Tables</li>
-            <li>  Beds</li>
-            <li>  Storage Furniture</li>
+            <li>Sofas</li>
+            <li>Chairs</li>
+            <li>Tables</li>
+            <li>Beds</li>
+            <li>Storage Furniture</li>
             <li>  Office Furniture</li>
           
                </ul>

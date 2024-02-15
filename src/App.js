@@ -24,8 +24,24 @@ import Adminhome from './components/AdminSide/Adminhome';
 import Addproduct from './components/AdminSide/Addproduct';
 import Productlist from './components/AdminSide/Productlist';
 import Editlist from './components/AdminSide/Editlist';
-
+// ---------------new-----------------------1
+import axios from "axios";
+// -----------------------------------------1
 export const userContext=createContext()
+
+// -----------------------new----------------------2
+
+
+export const Axios = axios.create({
+  baseURL : process.env.REACT_APP_BASE_URL,
+  headers: {
+    "Content-Type":"application/json",
+    Authorization:  `Bearer ${localStorage.getItem("jwt_token")}`,
+  }
+
+})
+console.log(process.env.REACT_APP_BASE_URL)
+//-----------------------------------------------------------2
 
 function App() {
   const [product,setProduct]=useState(Product)

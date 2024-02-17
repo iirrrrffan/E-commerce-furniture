@@ -40,7 +40,7 @@ export const Axios = axios.create({
   }
 
 })
-console.log(process.env.REACT_APP_BASE_URL)
+console.log(process.env.REACT_APP_BASE_URL,"haiu")
 //-----------------------------------------------------------2
 
 function App() {

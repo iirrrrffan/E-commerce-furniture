@@ -21,7 +21,7 @@ const Registration = () => {
 
     try {
       const payload = {username,emailId,password}
-      const res= await axios.post(
+      const res = await axios.post(
         "http://localhost:3000/api/users/register",payload
       )
       if(res.status === 201){
@@ -32,11 +32,6 @@ const Registration = () => {
     }catch(error){
       console.log(error);
     }
-
-
-
-
-
 
       if (!username || !emailId || !password) {
         setErrorMessage('Please fill out the form');

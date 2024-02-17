@@ -80,7 +80,7 @@ function Login() {
               <MDBInput wrapperClass='mb-4' label='Password' id='form2' type='password' name= "password" required/>
 
               <div className="text-center pt-1 mb-5 pb-1">
-              <MDBBtn className="mb-4 w-100 gradient-custom-2" >Sign in</MDBBtn>
+              <MDBBtn className="mb-4 w-100 gradient-custom-2" >Login</MDBBtn>
               <a className="text-muted" href="#!">Forgot password?</a>
             </div>
 

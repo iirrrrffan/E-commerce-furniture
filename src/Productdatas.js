@@ -13,7 +13,7 @@ export const Product = [
 
   {
     Id: 2,
-    ProductName: "ESPRESSO FINSH",
+    ProductName: "ESPRES FSOINSH",
     OldPrice: "22999",
     Price: "19999",
     Image:

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import {Navbar,NavDropdown,Container,Nav} from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
-import {RiLuggageCartFill} from 'react-icons/ri'
+import {RiLuggageCartFill,RiHeart2Line} from 'react-icons/ri'
 import {GrUserAdmin} from 'react-icons/gr'
 import { userContext } from '../App'
 import { toast } from 'react-toastify'
@@ -41,6 +41,9 @@ const Navigationbar = () => {
             </Nav>
             <Navbar.Collapse style={{justifyContent:"end"}} >
               <Nav style={{gap:"0.6rem", alignItems:"center"}} >
+              <Nav.Link >
+              <RiHeart2Line onClick={()=>navi("/wishlist")}/>
+                </Nav.Link>
                 <Nav.Link >
                   <RiLuggageCartFill onClick={()=>navi("/cart")} />
                 </Nav.Link>

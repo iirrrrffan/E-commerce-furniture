@@ -1,13 +1,42 @@
-import React, { useContext } from 'react'
-import { userContext } from '../../App'
+// import React, { useContext } from 'react'
+// import { userContext } from '../../App'
+import { useEffect, useState } from 'react'
 import Navigationbar from '../Navigationbar'
 import { Button, Card, Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
+import { Axios } from '../../App'
+import { toast } from 'react-toastify'
 
 const Office = () => {
-  const {product}=useContext(userContext)
-  const ofc=product.filter((item)=>item.type==='office')
-  const navi=useNavigate()
+  // const {product}=useContext(userContext)
+const [product,setProduct] = useState([])
+const navi=useNavigate()
+
+useEffect(()=>{
+  const fetchProduct =async () =>{
+    try{
+      const response = await Axios.get('http://localhost:3000/api/users/products')
+   
+     console.log(response,"hoi");
+  
+      if( response.status===201 ){
+         toast.success('successFully fetched',{
+         toastId:'sucess1'
+         })
+        setProduct(response.data.data)
+      }
+    }catch(error){
+       console.log(error);
+    }
+  }
+  fetchProduct()
+},[])
+
+
+
+
+  const ofc=product.filter((item)=>item.category==='office')
+ 
   return (
     <div>
       <Navigationbar/>
@@ -16,7 +45,7 @@ const Office = () => {
 
     {ofc.map((item) => (
         <div  className='d-flex align-items-center justify-content-center flex-wrap'>
-          <Button variant="primary" onClick={()=>navi(`/view/${item.Id}`)}>
+          <Button variant="primary" onClick={()=>navi(`/view/${item._id}`)}>
             <Card className="shadow p-3 m-2 bg-body-tertiary rounded"
                 style={{
                     width: "15rem",
@@ -27,11 +56,11 @@ const Office = () => {
                     justifyContent: "space-between",
                     
                 }}>
-                <Card.Img variant="top" src={item.Image} style={{ height: '13rem', width: '9rem' }} />
+                <Card.Img variant="top" src={item.image} style={{ height: '13rem', width: '9rem' }} />
                 <Card.Body>
-                    <Card.Title>{item.ProductName}</Card.Title>
-                    <Card.Text> Old Price <del>{item.OldPrice}</del></Card.Text>
-                    <Card.Text>Offer Price {item.Price}
+                    <Card.Title>{item.title}</Card.Title>
+                    <Card.Text> Old Price <del>{item.oldprice}</del></Card.Text>
+                    <Card.Text>Offer Price {item.price}
                     </Card.Text>
                     
                 </Card.Body>

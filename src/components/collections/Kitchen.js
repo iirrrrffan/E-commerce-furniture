@@ -11,7 +11,7 @@ import { toast } from 'react-toastify'
 const Kitchen = () => {
 //   const {product}=useContext(userContext)
 const [product,setProduct] = useState([])
-console.log(product,"hai");
+// console.log(product,"hai");
 
 useEffect(()=>{
     const fetchProduct = async()=>{
@@ -22,7 +22,7 @@ useEffect(()=>{
     toast.success('successFully fetched',{
     toastId:'sucess2'
     })
-   setProduct(res.data.product)
+   setProduct(res.data.data)
  }
 
    }catch(error){
@@ -38,7 +38,8 @@ useEffect(()=>{
 
 
 
-  const ktcn=product.filter((item)=>item.type==='kitchen')
+  const ktcn=product.filter((item)=>item.category==='kitchen')
+  // console.log(product,"pppp");
 
   const navi=useNavigate()
   return (
@@ -50,7 +51,7 @@ useEffect(()=>{
 
     {ktcn.map((item) => (
         <div  className='d-flex align-items-center justify-content-center flex-wrap'>
-          <Button variant="primary" onClick={()=>navi(`/view/${item.Id}`)}>
+          <Button variant="primary" onClick={()=>navi(`/view/${item._id}`)}>
             <Card className="shadow p-3 m-2 bg-body-tertiary rounded"
                 style={{
                     width: "15rem",
@@ -61,11 +62,11 @@ useEffect(()=>{
                     justifyContent: "space-between",
                     
                 }}>
-                <Card.Img variant="top" src={item.Image} style={{ height: '13rem', width: '9rem' }} />
+                <Card.Img variant="top" src={item.image} style={{ height: '13rem', width: '9rem' }} />
                 <Card.Body>
-                    <Card.Title>{item.ProductName}</Card.Title>
-                    <Card.Text> Old Price <del>{item.OldPrice}</del></Card.Text>
-                    <Card.Text>Offer Price {item.Price}
+                    <Card.Title>{item.title}</Card.Title>
+                    <Card.Text> Old Price <del>{item.oldprice}</del></Card.Text>
+                    <Card.Text>Offer Price {item.price}
                     </Card.Text>
                     
                 </Card.Body>

@@ -1,12 +1,38 @@
-import React, { useContext } from 'react'
+// import React, { useContext } from 'react'
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import { userContext } from '../../App';
+// import { userContext } from '../../App';
 import Navigationbar from '../Navigationbar';
 import { Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Axios } from '../../App';
+import { toast } from 'react-toastify';
 const Allitem = () => {
-    const { product } = useContext(userContext)
+    // const { product } = useContext(userContext)
+    const [product,setProduct]=useState([])
+ 
+    useEffect(()=>{
+        const fetchProduct =async () =>{
+          try{
+            const response = await Axios.get('http://localhost:3000/api/users/products')
+         
+           console.log(response,"ffff");
+        
+            if( response.status===201 ){
+               toast.success('successFully fetched',{
+               toastId:'sucess1'
+               })
+              setProduct(response.data.data)
+            }
+          }catch(error){
+             console.log(error);
+          }
+        }
+        fetchProduct()
+      },[])
+
+
      const navi=useNavigate()
     return ( 
         <div>
@@ -16,7 +42,7 @@ const Allitem = () => {
 
             {product.map((item) => (
                 <div  className='d-flex align-items-center justify-content-center flex-wrap'>
-                     <Button variant="primary" onClick={()=>navi(`/view/${item.Id}`)}>
+                     <Button variant="primary" onClick={()=>navi(`/view/${item._id}`)}>
                     <Card className="shadow p-3 m-2 bg-body-tertiary rounded"
                         style={{
                             width: "15rem",
@@ -27,11 +53,11 @@ const Allitem = () => {
                             justifyContent: "space-between",
                             
                         }}>
-                        <Card.Img variant="top" src={item.Image} style={{ height: '13rem', width: '9rem' }} />
+                        <Card.Img variant="top" src={item.image} style={{ height: '13rem', width: '9rem' }} />
                         <Card.Body>
-                            <Card.Title>{item.ProductName}</Card.Title>
-                            <Card.Text> Old Price <del>{item.OldPrice}</del></Card.Text>
-                            <Card.Text>Offer Price {item.Price}
+                            <Card.Title>{item.title}</Card.Title>
+                            <Card.Text> Old Price <del>{item.oldprice}</del></Card.Text>
+                            <Card.Text>Offer Price {item.price}
                             </Card.Text>
                            
                         </Card.Body>

@@ -55,7 +55,7 @@ console.log(bed,"kkkkk");
 
     {bed.map((item) => (
         <div  className='d-flex align-items-center justify-content-center flex-wrap'>
-          <Button variant="primary" onClick={()=>navi(`/view/${item.Id}`)} >
+          <Button variant="primary" onClick={()=>navi(`/view/${item._id}`)} >
             <Card className="shadow p-3 m-2 bg-body-tertiary rounded"
                 style={{
                     width: "15rem",
@@ -69,7 +69,7 @@ console.log(bed,"kkkkk");
                 <Card.Img variant="top" src={item.image} style={{ height: '13rem', width: '9rem' }} />
                 <Card.Body>
                     <Card.Title>{item.title}</Card.Title>
-                    <Card.Text> Old Price <del>{item.price}</del></Card.Text>
+                    <Card.Text> Old Price <del>{item.oldprice}</del></Card.Text>
                     <Card.Text>Offer Price {item.price}
                     </Card.Text>
                     

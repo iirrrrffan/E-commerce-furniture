@@ -1,5 +1,5 @@
 import Button from 'react-bootstrap/Button';
-import React, { useContext } from "react";
+// import React, { useContext } from "react";
 import {
   MDBCard,
   MDBCardBody,
@@ -10,23 +10,60 @@ import {
   MDBRow,
   MDBTypography,
 } from "mdb-react-ui-kit";
-import { userContext } from "../../App";
+// import { userContext } from "../../App";
 import Navigationbar from "../Navigationbar";
 import Foot from "./Foot";
+import {  useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Axios } from '../../App';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+const userId = localStorage.getItem("userID");
 
 export default function Cart() {
-  const { cart,setCart } = useContext(userContext);
-const remove=(index)=>{
-    const newTask=[...cart]
-    newTask.splice(index,1)
-    setCart(newTask) 
-}
-const dicri=(item)=>{
-  const updatecart=cart.map((cartItem)=>
-    cartItem.Id===item && cartItem.Qty>1?{...cartItem,Qty:cartItem.Qty-1}:cartItem
-  );
-  setCart(updatecart)
-}
+  // const { cart,setCart } = useContext(userContext);
+
+  const [cart, setCart] = useState([]);
+  const [price, setPrice] = useState(0);
+  const navigate = useNavigate();
+
+  const fetchCart = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/api/users/${userId}/cart`);
+      console.log(response.data.data.cart);
+      setCart(response.data.data.cart);
+    } catch (error) {
+      console.log("error fetching the product", error);
+      toast.error("error");
+    }
+  }
+  useEffect(()=>{
+    fetchCart()
+  },[])
+
+const remove = async (id) => {
+  try{
+     const productId = id;
+     const response =  await axios.delete(`http://localhost:3000/api/users/${userId}/cart`,{
+      data:{ productId:productId},
+     });
+     fetchCart();
+     console.log(response);
+  }catch(error){
+    console.log("error fetching the product", error);
+    toast.error("error");
+  }
+  
+};
+const decreaseQuantity = (Id) => {
+  const updatedCart = cart.map((item) => {
+    if (item._id === Id && item.qty > 1) {
+      return { ...item, qty: item.qty - 1 };
+    }
+    return item;
+  });
+  setCart(updatedCart);
+};
 const incri=(item)=>{
     const updatecart=cart.map((cartItem)=>{
         if(cartItem.Id===item.Id){
@@ -64,22 +101,22 @@ const totalcash=cart.reduce((total,item)=>total+item.Price*item.Qty,0)
               </div>
 
               {cart.map((item) => (
-                <MDBCard key={item.id} className="rounded-3 mb-4">
+                <MDBCard key={item._id} className="rounded-3 mb-4">
                   <MDBCardBody className="p-4">
                     <MDBRow className="justify-content-between align-items-center">
                       <MDBCol md="2" lg="2" xl="2">
                         <MDBCardImage
                           className="rounded-3"
                           fluid
-                          src={item.Image}
+                          src={item.image}
                           alt="products"
                         />
                       </MDBCol>
                       <MDBCol md="3" lg="3" xl="3">
-                        <p className="lead fw-normal mb-2">{item.ProductName}</p>
-                        <button onClick={()=>dicri(item.Id)}>-</button>
+                        <p className="lead fw-normal mb-2">{item.title}</p>
+                        <button onClick={()=>decreaseQuantity(item._id)}>-</button>
                         <span>{item.Qty}</span>
-                        <button onClick={()=>incri(item)}>+</button>
+                        <button onClick={()=>incri(item._id)}>+</button>
                       
                       </MDBCol>
                       <MDBCol
@@ -101,7 +138,7 @@ const totalcash=cart.reduce((total,item)=>total+item.Price*item.Qty,0)
                         <a href="#!" className="text-danger">
                           <MDBIcon
                           
-                            onClick={remove}
+                            onClick={()=>remove(item._id)}
                             icon="trash text-danger"
                             size="lg"
                           />

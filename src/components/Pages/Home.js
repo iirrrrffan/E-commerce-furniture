@@ -17,7 +17,7 @@ const Home = () => {
     <div>
       <div className="container-fluid">
         <Navigationbar />
-        <img src={banner} className='pb-5' style={{ width: '100%' }} alt="Banner" />
+        <img src={banner} className='pb-5' style={{ width: '100%' }} alt="Banner"/>
       </div>
       <div className="container pb-5">
         <div className="row justify-content-center">

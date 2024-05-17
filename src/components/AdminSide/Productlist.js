@@ -1,16 +1,49 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import SideBar from './SideBar'
 import { Button, Container, Table } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom'
-import { userContext } from '../../App';
+import { Axios } from '../../App';
+import { toast } from 'react-toastify';
+
 
 const Productlist = () => {
-    const {product,setProduct}=useContext(userContext)
+  
 
     const navi=useNavigate()
-    const Remove = (id) => {
-        const newUpdate = product.filter((item) => item.Id !== id);
-        setProduct(newUpdate);
+    const [product,setProduct] = useState([])
+
+
+
+    async function allProducts (){
+      try{
+        const response = await Axios.get("http://localhost:3000/api/admin/products");
+      
+        setProduct(response.data.data);
+      } catch (error) {
+        console.log(error);
+        toast.error(error.message || "Failed to fetch products");
+      }
+    }
+    useEffect(() => {
+      allProducts();
+    }, []);
+console.log(product,"irfaanm");
+
+    const Remove = async  (id) => {
+      try{
+          const productId = id;
+          console.log(productId);
+          const response = await Axios.delete("http://localhost:3000/api/admin/products", {
+            data: { id: productId },
+          });
+          allProducts();
+          console.log(response);
+        } catch (error) {
+          console.log(error);
+          toast.error(error.message || "Failed to fetch products");
+        
+      }
+     
       };
    return (
     <div style={{ display: "flex" }}>
@@ -32,35 +65,35 @@ const Productlist = () => {
             <th>Image</th>
             <th>Name</th>
 
+            <th>Old Price</th>
             <th>Price</th>
-            <th>Actual Price</th>
-            <th>Type</th>
-            <th>Stock</th>
+            <th>Category</th>
             <th>Action</th>
+          
           </tr>
           {product.map((item) => (
             <tr>
-              <td>{item.Id}</td>
+              <td>{item._id}</td>
               <td style={{ textAlign: "center" }}>
                 <img
                   style={{ height: "2rem" }}
-                  src={item.Image}
-                  alt={item.ProductName}
+                  src={item.image}
+                  alt={item.title}
                 />
               </td>
-              <td>{item.ProductName}</td>
-              <td>{item.OldPrice}</td>
-              <td>{item.Price}</td>
-              <td>{item.type}</td>
-              <td>{item.Stock}</td>
+              <td>{item.title}</td>
+              <td>{item.oldprice}</td>
+              <td>{item.price}</td>
+              <td>{item.category}</td>
+       
               <td style={{ textAlign: "center" }}>
                 <Button
                   style={{ marginRight: "30px" }}
-                  onClick={() => navi(`/editlist/${item.Id}`)}
+                  onClick={() => navi(`/editlist/${item._id}`)}
                 >
                   Edit
                 </Button>
-                <Button className="bg-danger" onClick={() => Remove(item.Id)}>
+                <Button className="bg-danger" onClick={() => Remove(item._id)}>
                   Remove
                 </Button>
               </td>

@@ -3,60 +3,57 @@ import { Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import SideBar from "./SideBar";
-import { userContext } from "../../App";
+import { Axios } from "../../App";
+import axios from "axios";
+
 
 const Addproduct = () => {
   const navigate = useNavigate();
-  const { product, setProduct } = useContext(userContext);
-  const [newProduct, setNewProduct] = useState({
-    ProductName: "",
-    Image: "",
-    OldPrice: "",
-    Price: "",
-    type: "",
-    Stock: "",
-  });
-  const [newId, setNewId] = useState(0);
-  product.forEach((item) => {
-    if (item.Id > newId) {
-      setNewId(item.Id);
-    }
-  });
-  const AddId = newId + 1;
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setNewProduct((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-  const handileAdd = (e) => {
-    e.preventDefault();
-    if (
-      !newProduct.Image ||
-      !newProduct.ProductName ||
-      !newProduct.OldPrice ||
-      !newProduct.Price ||
-      !newProduct.type ||
-      !newProduct.Stock
-    ){
-      toast.error("fill");
-    }
-    const newProductList = {
-      Id: AddId,
-      Image: newProduct.Image,
-      ProductName: newProduct.ProductName,
-      OldPrice: newProduct.OldPrice,
-      Price: newProduct.Price,
-      Qty: 1,
-      type: newProduct.type,
-      Stock: newProduct.Stock,
-    };
-    
 
-    setProduct([...product, newProductList]);
-    navigate("/productlist");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [oldprice,setOldprice] = useState("")
+  const [price, setPrice] = useState("");
+  const [image, setImage] = useState(null);
+  const [category, setCategory] = useState("");
+
+
+  const handleImageChange = (img) => {
+    const selectedImage = img.target.files[0];
+    setImage(selectedImage);
   };
+  const handleChangeCategory = (e) => {
+    setCategory(e.target.value);
+  };
+  const handileAdd = async (e) => {
+    e.preventDefault();
+
+    if (!title || !description || !oldprice || !price || !image || !category) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("image", image);
+    formData.append("category", category);
+  
+    try {
+      const response = await axios.post("http://localhost:3000/api/admin/products", formData);
+      console.log(response);
+      if (response.status === 201) {
+        toast.success("Product added successfully!");
+        navigate("/productlist");
+      } else {
+        toast.error("Failed to add product.");
+      }
+    } catch (error) {
+      console.error("Error uploading product:", error.message);
+      toast.error("Failed to add product.");
+    }
+  };
+
   return (
     <div style={{ display: "flex" }}>
       <SideBar />
@@ -74,11 +71,11 @@ const Addproduct = () => {
             <Form.Group>
               <Form.Label>Add Img src:</Form.Label>
               <Form.Control
-                type="text"
+                type="file"
                 name="Image"
                 placeholder="eg:https://a45fd48de1256.jpg"
-                value={newProduct.Image}
-                onChange={handleChange}
+
+                onChange={handleImageChange}
                 required
               />
             </Form.Group>
@@ -88,8 +85,8 @@ const Addproduct = () => {
                 type="text"
                 name="ProductName"
                 placeholder="ProductName"
-                value={newProduct.ProductName}
-                onChange={handleChange}
+
+                onChange={(e)=>setTitle(e.target.value)}
                 required
               />
             </Form.Group>
@@ -99,8 +96,8 @@ const Addproduct = () => {
                 type="text"
                 name="OldPrice"
                 placeholder="Price"
-                value={newProduct.OldPrice}
-                onChange={handleChange}
+    
+                onChange={(e)=>setOldprice(e.target.value)}
                 required
               />
             </Form.Group>
@@ -110,19 +107,19 @@ const Addproduct = () => {
                 type="text"
                 name="Price"
                 placeholder="Actual Price"
-                value={newProduct.Price}
-                onChange={handleChange}
+           
+                onChange={(e)=>setPrice(e.target.value)}
                 required
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Add Stock:</Form.Label>
+              <Form.Label>Add Discription</Form.Label>
               <Form.Control
                 type="text"
                 name="Stock"
-                placeholder="Stock"
-                value={newProduct.Stock}
-                onChange={handleChange}
+                placeholder="Discrption"
+            
+                onChange={(e)=>setDescription(e.target.value)}
                 required
               />
             </Form.Group>{" "}
@@ -133,14 +130,14 @@ const Addproduct = () => {
                 style={{ width: "200px" }}
               
                 name="type"
-                value={newProduct.type}
-                onChange={handleChange}
+      
+                onChange={(e)=>setCategory(e.target.value)}
                 required
               >
-            <option value="bedroom">bedroom</option>
-                  <option value="kitchen">kitchen</option>
-                  <option value="office">office</option>
-                  <option value="children room">children room</option>
+            <option value="bedroom">BEDROOM</option>
+                  <option value="kitchen">KITCHEN</option>
+                  <option value="office">OFFICE</option>
+                  <option value="children room">CHILDER ROOM</option>
                   <option value="DINING HALL">DINING HALL</option>
               </select>
             </Form.Group>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {  useNavigate } from 'react-router-dom'
 
 
@@ -14,11 +14,12 @@ from 'mdb-react-ui-kit';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import axios from "axios"
 import { toast } from 'react-toastify';
+import { userContext } from '../../App';
 
 
 
 function Login() {
-
+  const { setLoginUser } = useContext(userContext);
 
   const navigate = useNavigate();
 
@@ -36,9 +37,8 @@ function Login() {
     }
 
     const endpoint = username === adminUsername ? "http://localhost:3000/api/admin/login" : "http://localhost:3000/api/users/login"
-  
+    setLoginUser(true)
 
-    
     try {
       const loginData = {username,password}
       const response = await axios.post(endpoint, loginData);

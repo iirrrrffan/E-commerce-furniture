@@ -1,45 +1,73 @@
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import SideBar from "./SideBar";
-import { userContext } from "../../App";
+import { Axios} from "../../App";
+
 
 const Editlist = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { product, setProduct } = useContext(userContext);
 
-  const editProduct = product.find((item) => item.Id === parseInt(id));
+  const [product,setProduct] = useState({
+    title: "",
+    description: "",
+    oldprice:"",
+    price: "",
+    image: "",
+    category: "",
+  })
+  
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await Axios.get(`http://localhost:3000/api/admin//products/${id}`);
 
-  const [productName, setProductName] = useState(editProduct.ProductName);
-  const [price, setPrice] = useState(editProduct.Price);
-  const [oldPrice, setOldPrice] = useState(editProduct.OldPrice);
-  const [Type, setType] = useState(editProduct.type);
-  const [image, setImage] = useState(editProduct.Image);
-  const [stock, setStock] = useState(editProduct.Stock);
-
-  const submit = (e) => {
-    e.preventDefault();
-
-    const updatedProduct = {
-      ...editProduct,
-      Image: image,
-      ProductName: productName,
-      OldPrice: oldPrice,
-      Price: price,
-      type: Type,
-      Stock: stock,
+        const { _id, title, image, oldprice, price, description, category } =
+          response.data.data;
+        setProduct({
+          id: _id,
+          title,
+          image,
+          oldprice,
+          price,
+          category,
+          description,
+        });
+      } catch (error) {
+        console.log(error);
+        toast.error(error.message || "Failed to fetch products");
+      }
     };
+    fetchProduct();
+  }, [id]);
 
-    const updatedProducts = product.map((item) =>
-      item.Id === parseInt(id) ? updatedProduct : item
-    );
-    
-    setProduct(updatedProducts);
-    toast.success("successfully edited");
-    navigate("/productlist");
+  const submit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await Axios.put("http://localhost:3000/api/admin/products", product);
+      console.log(response,"kkkk");
+      if (response.status === 201) {
+        toast.success("Product Edited Successfully");
+        navigate("/productlist");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
   };
+
+  const handleChange = (a) => {
+    const { name, value } = a.target;
+    setProduct((PrevData) => ({
+      ...PrevData,
+      [name]: value,
+    }));
+  };
+
+console.log(product,"gffgfgfgf")
+
 
   return (
     <div style={{ display: "flex" }}>
@@ -58,61 +86,66 @@ const Editlist = () => {
               <Form.Group>
                 <Form.Label>Edit Img src:</Form.Label>
                 <Form.Control
-                  type="text"
+                  type="file"
                   name="Image"
-                  defaultValue={editProduct.Image}
-                  onChange={(e) => setImage(e.target.value)}
+                  defaultValue={product.image}
+                  onChange={handleChange}
                 />
               </Form.Group>
               <Form.Group>
                 <Form.Label>Edit product name:</Form.Label>
                 <Form.Control
                   type="text"
-                  name="ProductName"
-                  defaultValue={editProduct.ProductName}
-                  onChange={(e) => setProductName(e.target.value)}
+                  name="title"
+                  id="title"
+                  defaultValue={product.title}
+                  onChange={handleChange}
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>Edit price:</Form.Label>
+                <Form.Label>Edit Oldprice:</Form.Label>
                 <Form.Control
                   type="text"
                   name="OldPrice"
-                  defaultValue={editProduct.OldPrice}
-                  onChange={(e) => setOldPrice(e.target.value)}
+                  id="OldPrice"
+                  defaultValue={product.oldprice}
+                  onChange={handleChange}
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>Edit Actual price:</Form.Label>
+                <Form.Label>Edit Actual Price:</Form.Label>
                 <Form.Control
                   type="text"
-                  name="Price"
-                  defaultValue={editProduct.Price}
-                  onChange={(e) => setPrice(e.target.value)}
+                  name="price"
+                  id="price"
+                  defaultValue={product.price}
+                  onChange={handleChange}
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>Edit type:</Form.Label> <br />
+                <Form.Label>Edit Category:</Form.Label> <br />
                 <select
                   style={{ width: "200px" }}
-                  name="type"
-                  defaultValue={editProduct.type}
-                  onChange={(e) => setType(e.target.value)}
+                  name="category"
+                  id="category"
+                  defaultValue={product.category}
+                  onChange={handleChange}
                 >
-                  <option value="bedroom">bedroom</option>
-                  <option value="kitchen">kitchen</option>
-                  <option value="office">office</option>
-                  <option value="children room">children room</option>
+                  <option value="bedroom">BEDROOM</option>
+                  <option value="kitchen">KITCHEN</option>
+                  <option value="office">OFFICE</option>
+                  <option value="children room">CHILRED ROOM</option>
                   <option value="DINING HALL">DINING HALL</option>
                 </select>
               </Form.Group>
               <Form.Group>
-                <Form.Label>Edit Stock:</Form.Label>
+                <Form.Label>Edit Discription:</Form.Label>
                 <Form.Control
                   type="text"
-                  name="Stock"
-                  defaultValue={editProduct.Stock}
-                  onChange={(e) => setStock(e.target.value)}
+                  name="description"
+                  id="description"
+                  defaultValue={product.description}
+                  onChange={handleChange}
                 />
               </Form.Group>
               <Button className="m-3" type="submit" variant="primary">

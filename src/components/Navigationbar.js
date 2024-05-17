@@ -6,11 +6,15 @@ import {GrUserAdmin} from 'react-icons/gr'
 import { userContext } from '../App'
 import { toast } from 'react-toastify'
 
+
 const Navigationbar = () => {
+
+
   const navi=useNavigate()
-  const {login,setLogin}=useContext(userContext)
+  const {login,setLogin,loginUser,setLoginUser}=useContext(userContext)
+  console.log(loginUser);
   const logout=()=>{
-    setLogin(false)
+    setLoginUser(false)
     toast.success('logout success')
   }
 
@@ -48,7 +52,7 @@ const Navigationbar = () => {
                   <RiLuggageCartFill onClick={()=>navi("/cart")} />
                 </Nav.Link>
                 {
-                  login?<Nav.Link onClick={logout}>Logout</Nav.Link>:<Nav.Link onClick={()=>navi('/login')}>login</Nav.Link>
+                  loginUser?<Nav.Link onClick={logout}>Logout</Nav.Link>:<Nav.Link onClick={()=>navi('/login')}>login</Nav.Link>
                 }
                 <Nav.Link >
                 <GrUserAdmin onClick={()=>navi('/adminlogin')} />

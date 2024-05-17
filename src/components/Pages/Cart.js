@@ -1,5 +1,4 @@
 import Button from 'react-bootstrap/Button';
-// import React, { useContext } from "react";
 import {
   MDBCard,
   MDBCardBody,
@@ -10,7 +9,7 @@ import {
   MDBRow,
   MDBTypography,
 } from "mdb-react-ui-kit";
-// import { userContext } from "../../App";
+
 import Navigationbar from "../Navigationbar";
 import Foot from "./Foot";
 import {  useEffect, useState } from 'react';
@@ -21,7 +20,7 @@ import axios from 'axios';
 const userId = localStorage.getItem("userID");
 
 export default function Cart() {
-  // const { cart,setCart } = useContext(userContext);
+
 
   const [cart, setCart] = useState([]);
   const [price, setPrice] = useState(0);
@@ -55,31 +54,25 @@ const remove = async (id) => {
   }
   
 };
-const decreaseQuantity = (Id) => {
-  const updatedCart = cart.map((item) => {
-    if (item._id === Id && item.qty > 1) {
-      return { ...item, qty: item.qty - 1 };
-    }
-    return item;
-  });
-  setCart(updatedCart);
-};
-const incri=(item)=>{
-    const updatecart=cart.map((cartItem)=>{
-        if(cartItem.Id===item.Id){
-            return {...cartItem,Qty:cartItem.Qty+1}
-            
-        }return cartItem
-    })
-    setCart(updatecart)
-}
-const handleRemoveAll=()=>{
-  setCart([]);
-}
 const totalCartItem = (item) => {
-  return item.Price * item.Qty;
+  return item.price * item.qty;
 };
-const totalcash=cart.reduce((total,item)=>total+item.Price*item.Qty,0)
+
+
+const buyProduct = async ()=>{
+  try{
+    const response = await Axios.post(`http://localhost:3000/api/users/${userId}/payment`);
+      console.log(response.data.url);
+      window.location.href = response.data.url;
+  }catch(error){
+    toast.error(error);
+    console.log(error);
+  }
+}
+const totalCartPrice = cart.reduce(
+  (total, item) => total + item.price * 1,
+  0
+);
 
   return (
     <div>
@@ -92,12 +85,7 @@ const totalcash=cart.reduce((total,item)=>total+item.Price*item.Qty,0)
                 <MDBTypography tag="h3" className="fw-normal mb-0 text-black">
                    Shopping Cart
                 </MDBTypography>
-                <div>
-                  <p className="mb-0">
-                    <span >TOTAL: RS {totalcash}</span>
-                   
-                  </p>
-                </div>
+                
               </div>
 
               {cart.map((item) => (
@@ -114,9 +102,9 @@ const totalcash=cart.reduce((total,item)=>total+item.Price*item.Qty,0)
                       </MDBCol>
                       <MDBCol md="3" lg="3" xl="3">
                         <p className="lead fw-normal mb-2">{item.title}</p>
-                        <button onClick={()=>decreaseQuantity(item._id)}>-</button>
-                        <span>{item.Qty}</span>
-                        <button onClick={()=>incri(item._id)}>+</button>
+                        {/* <button >-</button>
+                        <span>count</span>
+                        <button >+</button> */}
                       
                       </MDBCol>
                       <MDBCol
@@ -125,13 +113,13 @@ const totalcash=cart.reduce((total,item)=>total+item.Price*item.Qty,0)
                         xl="2"
                         className="d-flex align-items-center justify-content-around"
                       >
-                        {/* Additional content here */}
+                        
                       </MDBCol>
                       <MDBCol md="3" lg="2" xl="2" className="offset-lg-1">
                         <MDBTypography tag="h5" className="mb-0">
-                          {item.Price}
+                          {item.price}
                         </MDBTypography>
-                        <h6>Total: ₹{totalCartItem(item)}</h6>
+                        {/* <h6>Total: ₹{totalCartItem(item)}</h6> */}
                       </MDBCol>
 
                       <MDBCol md="1" lg="1" xl="1" className="text-end">
@@ -151,8 +139,10 @@ const totalcash=cart.reduce((total,item)=>total+item.Price*item.Qty,0)
               
             </MDBCol>
           </MDBRow>
-        </MDBContainer>
-        <Button onClick={handleRemoveAll}  variant="danger" className="mb-5" >Delet All</Button>{' '}
+        </MDBContainer> 
+                <h6>Total: ₹{totalCartPrice}</h6>
+
+        <Button variant="primary" className="mb-5" onClick={buyProduct} >BUY</Button>{' '}
       </section>
       <Foot/>
     </div>

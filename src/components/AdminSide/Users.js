@@ -1,11 +1,27 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import SideBar from './SideBar'
 import { Table } from 'react-bootstrap';
-import { useContext } from 'react';
-import { userContext } from '../../App';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { Axios } from '../../App';
+
 
 const Users = () => {
-  const { user } = useContext(userContext);
+
+  const [user,setUser] = useState([])
+  useEffect(()=>{
+    const allUsers = async ()=>{
+      try{
+        const response = await Axios.get("http://localhost:3000/api/admin/users");
+        console.log(response.data.data);
+        setUser(response.data.data);
+      }catch(error){
+        console.log(error);
+        toast.error(error.message || "Failed to fetch users");
+      }
+    }
+    allUsers();
+  },[])
   return (
     <div style={{ display: "flex" }}>
       <SideBar />
@@ -26,7 +42,7 @@ const Users = () => {
           {user.map((item) => (
             <tbody>
               <tr>
-                <td>{item.name}</td>
+                <td>{item.username}</td>
                 <td>{item.email}</td>
               </tr>
             </tbody>

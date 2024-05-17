@@ -27,7 +27,7 @@ import Editlist from './components/AdminSide/Editlist';
 // ---------------new-----------------------1
 import axios from "axios";
 import Wish from './components/collections/Wish';
-
+import Success from './components/collections/Success';
 
 
 
@@ -55,6 +55,7 @@ function App() {
   const [cart,setCart]=useState([])
   const [wishLit ,setWishlist] = useState([])
 const [wishStatus, setWishStatus] = useState(false)
+const [loginUser, setLoginUser] = useState(false);
 
 const userId = localStorage.getItem("userID")
 console.log(userId,"KKk");
@@ -114,7 +115,7 @@ console.log(userId,"KKk");
   return (                          
     <div >
 
-<userContext.Provider value={{product,setProduct,user,setUser,login,setLogin,cart,setCart,addtowishlist}}>
+<userContext.Provider value={{product,setProduct,user,setUser,login,setLogin,cart,setCart,addtowishlist,loginUser,setLoginUser}}>
      <Routes>
       <Route path='/' element={<Home/>}/>
       <Route path='/sign' element={<Registration/>}/>
@@ -136,6 +137,8 @@ console.log(userId,"KKk");
       <Route path='/addproduct' element={<Addproduct/>}/>
       <Route path='/productlist' element={<Productlist/>}/>
       <Route path='/editlist/:id' element={<Editlist/>}/>
+      <Route path='/api/users/payment/success' element={<Success/>}/>
+
       
      </Routes>
     </userContext.Provider>
